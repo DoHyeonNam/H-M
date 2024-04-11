@@ -5,17 +5,19 @@ import { useParams } from 'react-router-dom'
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
+import {useDispatch,useSelector} from "react-redux";
+
+import { productAction } from '../redux/actions/productAction';
+
 
 const ProductDetail = () => {
-  const [productDetail, setProductDetail] = useState(null);
+  const selectitem = useSelector((state) => state.product.selectedItem);
+  const dispatch = useDispatch();
   let { id } = useParams();
-  const getProductDetail = async () => {
-    let url = `https://my-json-server.typicode.com/DoHyeonNam/H-M/products/${id}`
-    let response = await fetch(url);
-    let data = await response.json();
-    setProductDetail(data);
-
+  const getProductDetail =() => {
+    dispatch(productAction.getProductDetail(id))
   }
+
   useEffect(() => {
     getProductDetail();
   }, [])
@@ -24,14 +26,14 @@ const ProductDetail = () => {
       <Container>
         <Row>
           <Col className='product-img'>
-            <img src={productDetail?.img} />
+            <img src={selectitem?.img} />
           </Col>
           <Col>
-            <div className='title'>{productDetail?.title}</div>
+            <div className='title'>{selectitem?.title}</div>
 
-            <div className='price'>${productDetail?.price}</div>
+            <div className='price'>${selectitem?.price}</div>
 
-            <div className='choice'>{productDetail?.choice == true ? 'conscious choice' : ''}</div>
+            <div className='choice'>{selectitem?.choice == true ? 'conscious choice' : ''}</div>
 
             <div className='drop-down'>
             <Dropdown >

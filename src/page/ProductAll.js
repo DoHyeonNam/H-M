@@ -3,17 +3,16 @@ import ProductCard from '../component/ProductCard';
 import { Container,Row,Col } from 'react-bootstrap';
 import { useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
-
+import { productAction } from '../redux/actions/productAction';
+import {useDispatch,useSelector} from "react-redux";
 const ProductAll = () => {
-  const[productList,setProductList] = useState([]);
+  const productList = useSelector((state)=>state.product.productList)
   const [query] = useSearchParams();
-  const getProducts = async()=>{
+  const dispatch = useDispatch();
+  const getProducts = ()=>{
     let searchQuery = query.get('q') || '';
-    console.log("쿼리값은?",searchQuery);
-    let url= ` https://my-json-server.typicode.com/DoHyeonNam/H-M/products?q=${searchQuery}` // 쿼리값은 읽어오는데 상품을 못읽어옴;
-    let response = await fetch(url)
-    let data = await response.json()
-    setProductList(data);
+    console.log("쿼리값은?",searchQuery); //유즈 이펙트!
+    dispatch(productAction.getProducts(searchQuery))
   }
 
     useEffect(()=>{
